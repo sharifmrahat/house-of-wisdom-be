@@ -1,6 +1,6 @@
 import httpStatus from 'http-status'
 import ApiError from '../../../errors/ApiError'
-import { IBook, IBookFilters } from './book.interface'
+import { IBook, IBookFilters, IReview } from './book.interface'
 import { Book } from './book.model'
 import { IPaginationOptions } from '../../../interfaces/pagination'
 import { IGenericResponse } from '../../../interfaces/common'
@@ -66,6 +66,10 @@ const getAllBooks = async (
 
   const result = await Book.find(whereConditions)
     .populate('publisher', '-password -bookmark')
+    .populate({
+      path: 'reviews',
+      populate: [{ path: 'userId', select: { password: 0, bookmark: 0 } }],
+    })
     .sort(sortConditions)
     .skip(skip)
     .limit(limit)
@@ -83,10 +87,12 @@ const getAllBooks = async (
 }
 
 const getSingleBook = async (_id: string): Promise<IBook | null> => {
-  const result = await Book.findOne({ _id }).populate(
-    'publisher',
-    '-password -bookmark'
-  )
+  const result = await Book.findOne({ _id })
+    .populate('publisher', '-password -bookmark')
+    .populate({
+      path: 'reviews',
+      populate: [{ path: 'userId', select: { password: 0, bookmark: 0 } }],
+    })
   return result
 }
 
@@ -101,7 +107,37 @@ const updateBook = async (
 
   const result = await Book.findOneAndUpdate({ _id }, payload, {
     new: true,
-  }).populate('publisher', '-password -bookmark')
+  })
+    .populate('publisher', '-password -bookmark')
+    .populate({
+      path: 'reviews',
+      populate: [{ path: 'userId', select: { password: 0, bookmark: 0 } }],
+    })
+
+  return result
+}
+
+const addReview = async (
+  _id: string,
+  newReview: IReview
+): Promise<IBook | null> => {
+  const isExist = await Book.findOne({ _id })
+  if (!isExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Book is not found!')
+  }
+
+  const result = await Book.findOneAndUpdate(
+    { _id },
+    { $push: { reviews: newReview } },
+    {
+      new: true,
+    }
+  )
+    .populate('publisher', '-password -bookmark')
+    .populate({
+      path: 'reviews',
+      populate: [{ path: 'userId', select: { password: 0, bookmark: 0 } }],
+    })
 
   return result
 }
@@ -113,10 +149,12 @@ const deleteBook = async (_id: string): Promise<IBook | null> => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Book is not found!')
   }
 
-  const result = await Book.findByIdAndDelete(_id).populate(
-    'publisher',
-    '-password -bookmark'
-  )
+  const result = await Book.findByIdAndDelete(_id)
+    .populate('publisher', '-password -bookmark')
+    .populate({
+      path: 'reviews',
+      populate: [{ path: 'userId', select: { password: 0, bookmark: 0 } }],
+    })
   return result
 }
 
@@ -126,4 +164,5 @@ export const BookService = {
   getSingleBook,
   updateBook,
   deleteBook,
+  addReview,
 }

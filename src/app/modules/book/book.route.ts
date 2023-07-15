@@ -24,6 +24,13 @@ router.patch(
   BookController.updateBook
 )
 
+router.patch(
+  '/review/:id',
+  verifyUserAuth(),
+  requestValidator(BookValidation.addReviewZodSchema),
+  BookController.addReview
+)
+
 router.delete('/:id', verifyBookOwner(), BookController.deleteBook)
 
 export const BookRoutes = router
