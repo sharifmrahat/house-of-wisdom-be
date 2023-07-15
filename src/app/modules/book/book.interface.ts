@@ -2,7 +2,7 @@ import { Model, Types } from 'mongoose'
 import { IUser } from '../user/user.interface'
 
 export type IReview = {
-  userId: Types.ObjectId
+  user: Types.ObjectId
   description: string
 }
 

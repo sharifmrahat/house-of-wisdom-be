@@ -126,13 +126,25 @@ const addReview = async (
     throw new ApiError(httpStatus.NOT_FOUND, 'Book is not found!')
   }
 
-  const result = await Book.findOneAndUpdate(
-    { _id },
-    { $push: { reviews: newReview } },
-    {
-      new: true,
-    }
-  )
+  let reviewQuery = {}
+  let reviewData = {}
+
+  const reviewExist = await Book.findOne({
+    _id,
+    'reviews.user': newReview.user,
+  })
+
+  if (reviewExist) {
+    reviewQuery = { _id, 'reviews.user': newReview.user }
+    reviewData = { $set: { 'reviews.$.description': newReview.description } }
+  } else {
+    reviewQuery = { _id }
+    reviewData = { $push: { bookmark: newReview } }
+  }
+
+  const result = await Book.findOneAndUpdate(reviewQuery, reviewData, {
+    new: true,
+  })
     .populate('publisher', '-password -bookmark')
     .populate({
       path: 'reviews',

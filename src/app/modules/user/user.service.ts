@@ -38,59 +38,41 @@ const updateBookmark = async (
   if (!isExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User is not found!')
   }
-
+  let bookmarkQuery = {}
+  let bookmarkData = {}
   const bookExist = await User.findOne({
     _id: userId,
     'bookmark.book': newBookmark.book,
   })
 
   if (bookExist) {
-    const result = await User.findOneAndUpdate(
-      { _id: userId, 'bookmark.book': newBookmark.book },
-      { $set: { 'bookmark.$.status': newBookmark.status } },
-      { new: true }
-    )
-      .select({ name: 1, email: 1, bookmark: 1 })
-      .populate({
-        path: 'bookmark',
-        populate: [
-          {
-            path: 'book',
-            populate: [
-              { path: 'publisher', select: '-password -bookmark' },
-              {
-                path: 'reviews',
-                populate: [{ path: 'user', select: '-password -bookmark' }],
-              },
-            ],
-          },
-        ],
-      })
-    return result
+    bookmarkQuery = { _id: userId, 'bookmark.book': newBookmark.book }
+    bookmarkData = { $set: { 'bookmark.$.status': newBookmark.status } }
   } else {
-    const result = await User.findOneAndUpdate(
-      { _id: userId },
-      { $push: { bookmark: newBookmark } },
-      { new: true }
-    )
-      .select({ name: 1, email: 1, bookmark: 1 })
-      .populate({
-        path: 'bookmark',
-        populate: [
-          {
-            path: 'book',
-            populate: [
-              { path: 'publisher', select: '-password -bookmark' },
-              {
-                path: 'reviews',
-                populate: [{ path: 'user', select: '-password -bookmark' }],
-              },
-            ],
-          },
-        ],
-      })
-    return result
+    bookmarkQuery = { _id: userId }
+    bookmarkData = { $push: { bookmark: newBookmark } }
   }
+
+  const result = await User.findOneAndUpdate(bookmarkQuery, bookmarkData, {
+    new: true,
+  })
+    .select({ name: 1, email: 1, bookmark: 1 })
+    .populate({
+      path: 'bookmark',
+      populate: [
+        {
+          path: 'book',
+          populate: [
+            { path: 'publisher', select: '-password -bookmark' },
+            {
+              path: 'reviews',
+              populate: [{ path: 'user', select: '-password -bookmark' }],
+            },
+          ],
+        },
+      ],
+    })
+  return result
 }
 
 export const UserService = {
