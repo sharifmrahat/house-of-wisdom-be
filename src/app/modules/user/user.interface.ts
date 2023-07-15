@@ -10,6 +10,7 @@ export type IUser = {
   name: string
   email: string
   password: string
+  photoUrl: string
   bookmark?: IBookmark[]
 }
 

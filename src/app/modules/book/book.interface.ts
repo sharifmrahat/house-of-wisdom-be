@@ -11,11 +11,10 @@ export type IBook = {
   author: string
   genre: string
   price: number
+  imageUrl?: string
   publishedDate: Date
   publisher: Types.ObjectId | IUser
   reviews?: IReview[]
 }
 
-export type BookModel = {
-  isBookExist(title: string): Promise<IBook>
-} & Model<IUser>
+export type BookModel = Model<IBook>
