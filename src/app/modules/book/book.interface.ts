@@ -16,5 +16,10 @@ export type IBook = {
   publisher: Types.ObjectId | IUser
   reviews?: IReview[]
 }
+export type IBookFilters = {
+  searchTerm?: string
+  genre?: string
+  publishedYear?: number
+}
 
 export type BookModel = Model<IBook>

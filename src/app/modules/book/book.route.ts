@@ -6,10 +6,12 @@ import { BookController } from './book.controller'
 const router = express.Router()
 
 router.post(
-  '/add',
+  '/',
   requestValidator(BookValidation.addNewBookZodSchema),
   verifyUserAuth(),
   BookController.addNewBook
 )
+
+router.get('/', BookController.getAllBooks)
 
 export const BookRoutes = router
