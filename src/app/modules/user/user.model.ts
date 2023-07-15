@@ -26,6 +26,7 @@ const userSchema = new Schema<IUser>(
         {
           bookId: {
             type: Types.ObjectId,
+            ref: 'Book',
             required: true,
           },
           status: {

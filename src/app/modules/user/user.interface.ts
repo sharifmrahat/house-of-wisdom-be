@@ -1,7 +1,8 @@
 import { Model, Types } from 'mongoose'
+import { IBook } from '../book/book.interface'
 
 export type IBookmark = {
-  bookId: Types.ObjectId
+  bookId: Types.ObjectId | IBook
   status: 'Wishlist' | 'Reading' | 'Finished'
 }
 
@@ -13,7 +14,7 @@ export type IUser = {
 }
 
 export type UserModel = {
-  isUserExist(phonNumber: string): Promise<Pick<IUser, 'email' | 'password'>>
+  isUserExist(email: string): Promise<Pick<IUser, 'email' | 'password'>>
   isPasswordMatched(
     givenPassword: string,
     savedPassword: string
