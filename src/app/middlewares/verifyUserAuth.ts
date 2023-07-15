@@ -5,9 +5,8 @@ import config from '../../config'
 import ApiError from '../../errors/ApiError'
 import { jwtHelpers } from '../../helpers/jwtHelpers'
 
-const verifyAuth =
-  (...requiredRoles: string[]) =>
-  async (req: Request, res: Response, next: NextFunction) => {
+const verifyUserAuth =
+  () => async (req: Request, res: Response, next: NextFunction) => {
     try {
       const token = req.headers.authorization
       if (!token) {
@@ -22,14 +21,10 @@ const verifyAuth =
       )
 
       req.user = verifiedUser
-
-      if (requiredRoles.length && !requiredRoles.includes(verifiedUser.role)) {
-        throw new ApiError(httpStatus.FORBIDDEN, 'Access Forbidden')
-      }
       next()
     } catch (error) {
       next(error)
     }
   }
 
-export default verifyAuth
+export default verifyUserAuth
