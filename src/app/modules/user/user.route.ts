@@ -1,5 +1,4 @@
 import express from 'express'
 const router = express.Router()
 
-
-export const exampleRoutes = router
+export const userRoutes = router
