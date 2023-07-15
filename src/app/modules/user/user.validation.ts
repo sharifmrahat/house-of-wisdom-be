@@ -4,17 +4,16 @@ const updateProfileZodSchema = z.object({
   body: z.object({
     name: z.string().optional(),
     photoUrl: z.string().optional(),
-    bookmark: z
-      .array(
-        z.object({
-          bookId: z.string().nonempty(),
-          status: z.enum(['Wishlist', 'Reading', 'Finished']),
-        })
-      )
-      .optional(),
+  }),
+})
+
+const updateBookmarkZodSchema = z.object({
+  body: z.object({
+    status: z.enum(['Wishlist', 'Reading', 'Finished']),
   }),
 })
 
 export const UserValidation = {
   updateProfileZodSchema,
+  updateBookmarkZodSchema,
 }

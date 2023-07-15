@@ -25,7 +25,7 @@ const userSchema = new Schema<IUser>(
     bookmark: {
       type: [
         {
-          bookId: {
+          book: {
             type: Types.ObjectId,
             ref: 'Book',
             required: true,

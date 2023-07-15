@@ -68,7 +68,7 @@ const getAllBooks = async (
     .populate('publisher', '-password -bookmark')
     .populate({
       path: 'reviews',
-      populate: [{ path: 'userId', select: { password: 0, bookmark: 0 } }],
+      populate: [{ path: 'user', select: { password: 0, bookmark: 0 } }],
     })
     .sort(sortConditions)
     .skip(skip)
@@ -91,7 +91,7 @@ const getSingleBook = async (_id: string): Promise<IBook | null> => {
     .populate('publisher', '-password -bookmark')
     .populate({
       path: 'reviews',
-      populate: [{ path: 'userId', select: { password: 0, bookmark: 0 } }],
+      populate: [{ path: 'user', select: { password: 0, bookmark: 0 } }],
     })
   return result
 }
@@ -111,7 +111,7 @@ const updateBook = async (
     .populate('publisher', '-password -bookmark')
     .populate({
       path: 'reviews',
-      populate: [{ path: 'userId', select: { password: 0, bookmark: 0 } }],
+      populate: [{ path: 'user', select: { password: 0, bookmark: 0 } }],
     })
 
   return result
@@ -136,7 +136,7 @@ const addReview = async (
     .populate('publisher', '-password -bookmark')
     .populate({
       path: 'reviews',
-      populate: [{ path: 'userId', select: { password: 0, bookmark: 0 } }],
+      populate: [{ path: 'user', select: { password: 0, bookmark: 0 } }],
     })
 
   return result
@@ -153,7 +153,7 @@ const deleteBook = async (_id: string): Promise<IBook | null> => {
     .populate('publisher', '-password -bookmark')
     .populate({
       path: 'reviews',
-      populate: [{ path: 'userId', select: { password: 0, bookmark: 0 } }],
+      populate: [{ path: 'user', select: { password: 0, bookmark: 0 } }],
     })
   return result
 }

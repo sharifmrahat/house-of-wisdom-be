@@ -2,7 +2,7 @@ import { Model, Types } from 'mongoose'
 import { IBook } from '../book/book.interface'
 
 export type IBookmark = {
-  bookId: Types.ObjectId | IBook
+  book: Types.ObjectId | IBook
   status: 'Wishlist' | 'Reading' | 'Finished'
 }
 

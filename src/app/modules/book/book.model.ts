@@ -14,7 +14,7 @@ const bookSchema = new Schema<IBook>(
     publisher: { type: Types.ObjectId, ref: 'User', required: true },
     reviews: [
       {
-        userId: { type: Types.ObjectId, ref: 'User', required: true },
+        user: { type: Types.ObjectId, ref: 'User', required: true },
         description: { type: String, required: true },
       },
     ],

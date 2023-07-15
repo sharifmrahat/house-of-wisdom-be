@@ -7,6 +7,13 @@ const router = express.Router()
 router.get('/my-profile', verifyUserAuth(), UserController.getMyProfileUser)
 
 router.patch(
+  '/bookmark/:id',
+  requestValidator(UserValidation.updateBookmarkZodSchema),
+  verifyUserAuth(),
+  UserController.updateBookmark
+)
+
+router.patch(
   '/my-profile',
   requestValidator(UserValidation.updateProfileZodSchema),
   verifyUserAuth(),

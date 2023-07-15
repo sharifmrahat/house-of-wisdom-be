@@ -32,7 +32,23 @@ const updateProfile = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
+const updateBookmark = catchAsync(async (req: Request, res: Response) => {
+  const id = req.user?.userId
+  const payload = req.body
+
+  const newBookmark = { ...payload, book: req.params.id }
+  const result = await UserService.updateBookmark(id, newBookmark)
+
+  sendResponse<IUser>(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Bookmark updated successfully',
+    data: result,
+  })
+})
+
 export const UserController = {
   getMyProfileUser,
   updateProfile,
+  updateBookmark,
 }
