@@ -11,6 +11,18 @@ const addNewBookZodSchema = z.object({
   }),
 })
 
+const updateBookZodSchema = z.object({
+  body: z.object({
+    title: z.string().optional(),
+    author: z.string().optional(),
+    genre: z.string().optional(),
+    price: z.number().positive().optional(),
+    imageUrl: z.string().optional(),
+    publishedDate: z.string().optional(),
+  }),
+})
+
 export const BookValidation = {
   addNewBookZodSchema,
+  updateBookZodSchema,
 }

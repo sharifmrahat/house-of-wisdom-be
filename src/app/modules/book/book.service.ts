@@ -82,7 +82,48 @@ const getAllBooks = async (
   }
 }
 
+const getSingleBook = async (_id: string): Promise<IBook | null> => {
+  const result = await Book.findOne({ _id }).populate(
+    'publisher',
+    '-password -bookmark'
+  )
+  return result
+}
+
+const updateBook = async (
+  _id: string,
+  payload: Partial<IBook>
+): Promise<IBook | null> => {
+  const isExist = await Book.findOne({ _id })
+  if (!isExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Book is not found!')
+  }
+
+  const result = await Book.findOneAndUpdate({ _id }, payload, {
+    new: true,
+  }).populate('publisher', '-password -bookmark')
+
+  return result
+}
+
+const deleteBook = async (_id: string): Promise<IBook | null> => {
+  const isExist = await Book.findOne({ _id })
+
+  if (!isExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Book is not found!')
+  }
+
+  const result = await Book.findByIdAndDelete(_id).populate(
+    'publisher',
+    '-password -bookmark'
+  )
+  return result
+}
+
 export const BookService = {
   addNewBook,
   getAllBooks,
+  getSingleBook,
+  updateBook,
+  deleteBook,
 }
