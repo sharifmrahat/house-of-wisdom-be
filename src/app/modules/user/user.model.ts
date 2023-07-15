@@ -2,6 +2,7 @@ import { Schema, Types, model } from 'mongoose'
 import { IUser, UserModel } from './user.interface'
 import uniqueValidator from 'mongoose-unique-validator'
 import validator from 'validator'
+import bcrypt from 'bcrypt'
 
 const userSchema = new Schema<IUser>(
   {
@@ -43,8 +44,15 @@ const userSchema = new Schema<IUser>(
 
 userSchema.statics.isUserExist = async function (
   email: string
-): Promise<Pick<IUser, 'email'> | null> {
-  return await User.findOne({ email }, { email: 1 })
+): Promise<Pick<IUser, 'email' | 'password'> | null> {
+  return await User.findOne({ email }, { email: 1, password: 1 })
+}
+
+userSchema.statics.isPasswordMatched = async function (
+  givenPassword: string,
+  savedPassword: string
+): Promise<boolean> {
+  return await bcrypt.compare(givenPassword, savedPassword)
 }
 
 //unique validator for email
