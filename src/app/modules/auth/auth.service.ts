@@ -54,6 +54,7 @@ const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   return {
     accessToken,
     refreshToken,
+    user: currentUser as IUser,
   }
 }
 
