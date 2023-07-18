@@ -63,7 +63,14 @@ const updateBookmark = async (
 
   if (bookExist) {
     bookmarkQuery = { _id: userId, 'bookmark.book': newBookmark.book }
-    bookmarkData = { $set: { 'bookmark.$.status': newBookmark.status } }
+    const sameStatus = bookExist.bookmark?.find(
+      book => book.status === newBookmark.status
+    )
+    if (sameStatus) {
+      bookmarkData = { $pull: { bookmark: { book: newBookmark.book } } }
+    } else {
+      bookmarkData = { $set: { 'bookmark.$.status': newBookmark.status } }
+    }
   } else {
     bookmarkQuery = { _id: userId }
     bookmarkData = { $push: { bookmark: newBookmark } }
