@@ -68,7 +68,7 @@ const updateBook = catchAsync(async (req: Request, res: Response) => {
 const addReview = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id
   const payload = req.body
-  const newReview = { ...payload, user: req.user?.userId }
+  const newReview = { ...payload, user: req?.user?.userId }
 
   const result = await BookService.addReview(id, newReview)
 

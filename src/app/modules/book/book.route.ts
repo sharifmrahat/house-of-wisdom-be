@@ -26,8 +26,8 @@ router.patch(
 
 router.patch(
   '/review/:id',
-  verifyUserAuth(),
   requestValidator(BookValidation.addReviewZodSchema),
+  verifyUserAuth(),
   BookController.addReview
 )
 
