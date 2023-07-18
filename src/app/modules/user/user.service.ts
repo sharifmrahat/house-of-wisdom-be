@@ -5,11 +5,27 @@ import { User } from './user.model'
 import { JwtPayload } from 'jsonwebtoken'
 
 const getMyProfile = async (user: JwtPayload | null): Promise<IUser | null> => {
-  const result = await User.findOne({ _id: user?.userId }).select({
-    name: 1,
-    email: 1,
-    bookmark: 1,
-  })
+  const result = await User.findOne({ _id: user?.userId })
+    .select({
+      name: 1,
+      email: 1,
+      bookmark: 1,
+    })
+    .populate({
+      path: 'bookmark',
+      populate: [
+        {
+          path: 'book',
+          populate: [
+            { path: 'publisher', select: '-password -bookmark' },
+            {
+              path: 'reviews',
+              populate: [{ path: 'user', select: '-password -bookmark' }],
+            },
+          ],
+        },
+      ],
+    })
   return result
 }
 
